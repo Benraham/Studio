@@ -4,6 +4,8 @@ import type {
   Idea,
   Interview,
   Profile,
+  ShortFormIdea,
+  ShortFormScript,
   SlideDeck,
   YouTubeMyVideos,
   YouTubeTokens,
@@ -18,6 +20,9 @@ export const keys = {
   interview: (id: string) => `interview:${id}`,
   slides: (id: string) => `slides:${id}`,
   chatThread: "chat:thread",
+  shortFormIndex: "short-form:index",
+  shortFormIdea: (id: string) => `short-form:idea:${id}`,
+  shortFormScript: (id: string) => `short-form:script:${id}`,
 };
 
 // Profile
@@ -108,4 +113,35 @@ export async function saveChatThread(thread: ChatThread): Promise<void> {
 
 export async function clearChatThread(): Promise<void> {
   await kv.del(keys.chatThread);
+}
+
+// Short-form ideas
+export async function listShortFormIdeas(): Promise<ShortFormIdea[]> {
+  const ids = (await kv.lrange<string>(keys.shortFormIndex, 0, -1)) ?? [];
+  if (ids.length === 0) return [];
+  const ideas = await Promise.all(ids.map((id) => kv.get<ShortFormIdea>(keys.shortFormIdea(id))));
+  return ideas.filter((x): x is ShortFormIdea => x !== null);
+}
+
+export async function getShortFormIdea(id: string): Promise<ShortFormIdea | null> {
+  return (await kv.get<ShortFormIdea>(keys.shortFormIdea(id))) ?? null;
+}
+
+export async function saveShortFormIdea(idea: ShortFormIdea, isNew = false): Promise<void> {
+  await kv.set(keys.shortFormIdea(idea.id), idea);
+  if (isNew) await kv.lpush(keys.shortFormIndex, idea.id);
+}
+
+export async function deleteShortFormIdea(id: string): Promise<void> {
+  await kv.del(keys.shortFormIdea(id));
+  await kv.lrem(keys.shortFormIndex, 0, id);
+}
+
+// Short-form scripts
+export async function getShortFormScript(id: string): Promise<ShortFormScript | null> {
+  return (await kv.get<ShortFormScript>(keys.shortFormScript(id))) ?? null;
+}
+
+export async function saveShortFormScript(script: ShortFormScript): Promise<void> {
+  await kv.set(keys.shortFormScript(script.ideaId), script);
 }

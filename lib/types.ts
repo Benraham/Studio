@@ -86,3 +86,24 @@ export interface ChatMessage {
 export interface ChatThread {
   messages: ChatMessage[];
 }
+
+export type ShortFormStatus = "idea" | "scripted" | "filmed" | "posted";
+
+export interface ShortFormIdea {
+  id: string;
+  title: string;
+  hook: string;
+  angle: string;
+  duration: 15 | 30 | 45 | 60 | 90;
+  status: ShortFormStatus;
+  createdAt: number;
+  scriptAt?: number;
+}
+
+export interface ShortFormScript {
+  ideaId: string;
+  hook: string;
+  body: string;
+  close: string;
+  generatedAt: number;
+}

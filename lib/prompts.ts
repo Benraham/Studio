@@ -173,6 +173,85 @@ export function buildSlideDeckPrompt(
   ].join("\n");
 }
 
+export function buildShortFormIdeaPrompt(
+  profile: Profile | null,
+  existingTitles: string[],
+  count: number,
+  focus?: string,
+): string {
+  const avoidBlock =
+    existingTitles.length > 0
+      ? `## AVOID THESE (already in the short-form pipeline)\n${existingTitles.map((t) => `- ${t}`).join("\n")}`
+      : "## AVOID: (pipeline is empty — no constraints)";
+
+  return [
+    `Generate exactly ${count} Instagram Reels ideas for this Director of Paid Media / e-commerce growth expert.`,
+    focus ? `\nFocus area: ${focus}` : "",
+    "",
+    buildProfileSnippet(profile),
+    "",
+    avoidBlock,
+    "",
+    "## REELS CONTENT TYPES TO MIX",
+    "- Hot take / contrarian claim (e.g. 'Stop A/B testing your creatives — here's why')",
+    "- Quick tutorial with one insight ('The 10-second rule that doubled our ROAS')",
+    "- POV / day-in-the-life ('POV: you're managing $500k/month in Meta spend')",
+    "- Myth-busting ('Everyone says broad targeting is dead. They're wrong.')",
+    "- Reaction / context ('Meta just changed X — here's what it actually means for your ads')",
+    "- Framework drop ('3-step creative testing sprint I run every Monday')",
+    "Use a healthy mix. Vary the content types across the batch.",
+    "",
+    "## REELS FORMAT RULES",
+    "- Hook must be the FIRST 3 SECONDS of the video — a spoken sentence that stops the scroll.",
+    "- Duration: pick 15, 30, 45, 60, or 90 seconds based on how much content the idea needs.",
+    "- Short, punchy, mobile-first. No complex B-roll needed — talking head is fine.",
+    "- Audience: e-commerce founders, marketing directors, and aspiring media buyers.",
+    "",
+    "## OUTPUT FORMAT",
+    "Return ONLY a valid JSON array. Each element:",
+    '{ "title": string, "hook": string, "angle": string, "duration": number }',
+    "- title: ≤ 50 chars. Punchy caption/title for the Reel.",
+    "- hook: the first 3 seconds verbatim — what they say on camera to open.",
+    "- angle: 1 sentence — the unique POV that makes THIS reel worth watching.",
+    "- duration: 15, 30, 45, 60, or 90 (number, not string).",
+    "",
+    "No prose, no code fence, no commentary. Just the JSON array.",
+  ].join("\n");
+}
+
+export function buildShortFormScriptPrompt(
+  idea: { title: string; hook: string; angle: string; duration: number },
+  profile: Profile | null,
+): string {
+  const wordCount = Math.round((idea.duration / 60) * 150);
+
+  return [
+    `Write a word-for-word Instagram Reels script for this idea.`,
+    "",
+    `Title: ${idea.title}`,
+    `Hook (first 3 seconds): ${idea.hook}`,
+    `Angle: ${idea.angle}`,
+    `Duration: ${idea.duration} seconds (~${wordCount} words total)`,
+    "",
+    buildProfileSnippet(profile),
+    "",
+    "## SCRIPT RULES",
+    "- Written exactly as the creator would SPEAK it — in their documented voice.",
+    "- Hook section: the opening line verbatim (already given above — use it exactly).",
+    "- Body: deliver the core insight or framework. Specific, direct, no filler.",
+    "- Close: a natural CTA — 'follow for more', 'save this', or similar. NOT salesy.",
+    "- NO B-roll cues, camera directions, or production notes. Just the spoken words.",
+    "- Do NOT invent specific client names, revenue figures, or campaign results — keep examples illustrative.",
+    "",
+    "## OUTPUT FORMAT",
+    "Return ONLY this JSON object — no prose, no code fence:",
+    '{ "hook": string, "body": string, "close": string }',
+    "- hook: the opening 3-second line (match the idea hook exactly).",
+    "- body: the main script, newline-separated sentences for easy reading.",
+    "- close: the closing CTA line(s).",
+  ].join("\n");
+}
+
 export function buildProfileSummaryPrompt(answers: { q: string; a: string }[]): string {
   const text = answers.map((p, i) => `Q${i + 1}: ${p.q}\nA${i + 1}: ${p.a}`).join("\n\n");
   return [
