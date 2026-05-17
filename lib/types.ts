@@ -25,11 +25,24 @@ export interface Interview {
   completedAt?: number;
 }
 
+export type SlideLayout = "default" | "stat" | "chart" | "steps" | "quote";
+
 export interface Slide {
+  layout?: SlideLayout;
   title: string;
   bullets?: string[];
   body?: string;
   speakerNotes?: string;
+  // Layout-specific payloads:
+  stat?: { value: string; label: string; context?: string };
+  chart?: {
+    type: "bar";
+    items: { label: string; value: number }[];
+    unit?: string;
+    maxValue?: number;
+  };
+  steps?: { steps: string[] };
+  quote?: string;
 }
 
 export interface SlideDeck {
