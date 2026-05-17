@@ -84,7 +84,7 @@ export function ChatPanel() {
 
   return (
     <div
-      className="flex flex-col h-[calc(100vh-80px)] max-h-[900px] rounded-[16px] overflow-hidden"
+      className="flex flex-col h-[600px] rounded-[16px] overflow-hidden"
       style={{
         background: "rgba(255, 255, 255, 0.72)",
         backdropFilter: "blur(20px) saturate(1.8)",
