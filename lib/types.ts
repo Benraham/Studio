@@ -1,0 +1,75 @@
+export type IdeaStatus = "idea" | "interviewing" | "ready" | "recorded" | "posted";
+
+export interface Idea {
+  id: string;
+  title: string;
+  hook: string;
+  angle: string;
+  status: IdeaStatus;
+  tags?: string[];
+  createdAt: number;
+  interviewId?: string;
+  slidesAt?: number;
+}
+
+export interface InterviewQA {
+  q: string;
+  a?: string;
+}
+
+export interface Interview {
+  id: string;
+  ideaId: string;
+  questions: InterviewQA[];
+  currentIndex: number;
+  completedAt?: number;
+}
+
+export interface Slide {
+  title: string;
+  bullets?: string[];
+  body?: string;
+  speakerNotes?: string;
+}
+
+export interface SlideDeck {
+  slides: Slide[];
+  generatedAt: number;
+}
+
+export interface Profile {
+  background: string;
+  expertise: string;
+  hotTakes: string;
+  voice: string;
+  audience: string;
+  completedAt: number;
+  rawAnswers: { q: string; a: string }[];
+}
+
+export interface YouTubeTokens {
+  access_token: string;
+  refresh_token: string;
+  expires_at: number;
+  channel_id: string;
+  channel_title: string;
+}
+
+export interface YouTubeMyVideos {
+  titles: string[];
+  fetchedAt: number;
+}
+
+export type ChatRole = "user" | "assistant";
+
+export interface ChatMessage {
+  id: string;
+  role: ChatRole;
+  content: string;
+  toolCalls?: { name: string; input: unknown; result?: unknown }[];
+  createdAt: number;
+}
+
+export interface ChatThread {
+  messages: ChatMessage[];
+}
