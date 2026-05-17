@@ -122,7 +122,7 @@ export function ShortFormIdeaCard({ idea, onChange }: Props) {
       <div className="flex flex-wrap items-center gap-2 pt-1">
         {idea.status === "idea" ? (
           <Button size="sm" onClick={writeScript} loading={busy === "script"} disabled={busy !== null}>
-            Write script
+            Get outline
           </Button>
         ) : null}
         {idea.status === "scripted" || (idea.status !== "idea" && idea.scriptAt) ? (
@@ -133,7 +133,7 @@ export function ShortFormIdeaCard({ idea, onChange }: Props) {
             loading={busy === "loadScript"}
             disabled={busy !== null}
           >
-            {scriptOpen ? "Hide script" : "View script"}
+            {scriptOpen ? "Hide outline" : "View outline"}
           </Button>
         ) : null}
         {idea.status === "scripted" ? (
@@ -169,9 +169,9 @@ export function ShortFormIdeaCard({ idea, onChange }: Props) {
             border: "1px solid rgba(0,0,0,0.06)",
           }}
         >
-          <ScriptSection label="Hook" text={script.hook} />
-          <ScriptSection label="Body" text={script.body} />
-          <ScriptSection label="Close" text={script.close} />
+          <ScriptSection label="Open with" text={script.hook} />
+          <ScriptSection label="Cover" text={script.body} />
+          <ScriptSection label="Wrap with" text={script.close} />
         </div>
       ) : null}
     </div>

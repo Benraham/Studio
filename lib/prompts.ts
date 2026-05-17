@@ -223,32 +223,31 @@ export function buildShortFormScriptPrompt(
   idea: { title: string; hook: string; angle: string; duration: number },
   profile: Profile | null,
 ): string {
-  const wordCount = Math.round((idea.duration / 60) * 150);
+  const pointCount = idea.duration <= 30 ? 2 : idea.duration <= 60 ? 3 : 4;
 
   return [
-    `Write a word-for-word Instagram Reels script for this idea.`,
+    `Write a talking-point outline for this Instagram Reel. NOT a full script — just tell the creator what to cover so they can yap naturally on camera.`,
     "",
     `Title: ${idea.title}`,
-    `Hook (first 3 seconds): ${idea.hook}`,
+    `Hook: ${idea.hook}`,
     `Angle: ${idea.angle}`,
-    `Duration: ${idea.duration} seconds (~${wordCount} words total)`,
+    `Duration: ${idea.duration} seconds`,
     "",
     buildProfileSnippet(profile),
     "",
-    "## SCRIPT RULES",
-    "- Written exactly as the creator would SPEAK it — in their documented voice.",
-    "- Hook section: the opening line verbatim (already given above — use it exactly).",
-    "- Body: deliver the core insight or framework. Specific, direct, no filler.",
-    "- Close: a natural CTA — 'follow for more', 'save this', or similar. NOT salesy.",
-    "- NO B-roll cues, camera directions, or production notes. Just the spoken words.",
-    "- Do NOT invent specific client names, revenue figures, or campaign results — keep examples illustrative.",
+    "## OUTLINE RULES",
+    `- Hook: the exact opening line to say (use the hook above verbatim or very close to it).`,
+    `- Body: exactly ${pointCount} bullet-point talking points. Each is ONE short sentence telling them WHAT to say — not HOW to say it. Think 'remind them of X', 'drop the stat about Y', 'explain why Z is wrong'.`,
+    "- Close: one line on how to wrap — what CTA to drop naturally.",
+    "- Do NOT write full sentences the creator should read out. This is a prompt, not a teleprompter.",
+    "- Do NOT invent specific client names, revenue figures, or campaign results — keep talking points illustrative.",
     "",
     "## OUTPUT FORMAT",
     "Return ONLY this JSON object — no prose, no code fence:",
     '{ "hook": string, "body": string, "close": string }',
-    "- hook: the opening 3-second line (match the idea hook exactly).",
-    "- body: the main script, newline-separated sentences for easy reading.",
-    "- close: the closing CTA line(s).",
+    "- hook: the opening line (verbatim or near-verbatim from the idea hook).",
+    `- body: ${pointCount} talking points, each on its own line starting with '• '.`,
+    "- close: one short wrap-up/CTA suggestion.",
   ].join("\n");
 }
 
