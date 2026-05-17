@@ -14,9 +14,11 @@ const TRACK = "#E5E7EB";
 interface Props {
   slides: Slide[];
   title?: string;
+  onRegenerate?: () => Promise<void>;
+  regenerating?: boolean;
 }
 
-export function SlideViewer({ slides, title }: Props) {
+export function SlideViewer({ slides, title, onRegenerate, regenerating }: Props) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [showNotes, setShowNotes] = useState(false);
@@ -108,6 +110,17 @@ export function SlideViewer({ slides, title }: Props) {
             {showNotes ? "Hide notes" : "Show notes"}{" "}
             <span style={{ color: DIM }}>(N)</span>
           </button>
+          {onRegenerate ? (
+            <button
+              onClick={() => void onRegenerate()}
+              disabled={regenerating}
+              style={{ color: MUTED }}
+              className="hover:opacity-70 transition-opacity disabled:opacity-40 flex items-center gap-1.5"
+            >
+              {regenerating ? <span className="spinner" style={{ width: 11, height: 11 }} /> : null}
+              Regenerate deck
+            </button>
+          ) : null}
           <button
             onClick={exit}
             style={{ color: MUTED }}

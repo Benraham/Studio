@@ -84,5 +84,13 @@ export default function ViewerPage({
     );
   }
 
-  return <SlideViewer slides={deck.slides} title={idea?.title} />;
+  return (
+    <SlideViewer
+      key={deck.generatedAt}
+      slides={deck.slides}
+      title={idea?.title}
+      onRegenerate={generate}
+      regenerating={generating}
+    />
+  );
 }
